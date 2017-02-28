@@ -1,5 +1,6 @@
 var mongoose = require("mongoose"),
    Question = mongoose.model('Question'),
+   User = mongoose.model('User'),
 
 //Require the dev-dependencies
   chai = require('chai'),
@@ -35,26 +36,25 @@ describe('<Unit Test>', function() {
         });
 
 
-        describe('/GET/:id Question', function(){
-          it('it should GET a question by the given id', function(done){
-            var question = new Question({ text: "Where is the president of Nigeria", numAnswers: 3, official: false});
-            question.save(function(err){
-              console.log("question", JSON.stringify(question));
-                chai.request(app)               
-                .get('/questions/' + question._id.toString())
-                .send(question)
-                .end(function(err, res) {
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.be.a('object');
-                    expect(res.body).to.have.property('text');
-                    expect(res.body).to.have.property('numAmswers');                   
-                   // expect(res.body).to.have.property('_id').eql(question._id);
-                  done();
-                });
+         describe('/Get current user', function() {
+            it('it should Get the current user', function(done) {                
+                chai.request(app)
+                  .get('/users/me')
+                  .end(function(err, res){ 
+                      expect(res).to.have.status(200);
+                      expect(res.body).to.satisfy(function(val){
+                         return typeof(val) == "object";
+                      });              
+                      
+                      //expect(res.body).to.be.a('null');
+                      //res.body.length.should.not.be.eql(0);
+                    done();
+                  });
             });
+            
+        });
 
-          });
-      });
+     
     });
        
     });
