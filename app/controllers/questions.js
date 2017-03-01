@@ -36,6 +36,8 @@ exports.all = function(req, res) {
                 status: 500
             });
         } else {
+            console.log("i m here oh");
+            console.log(questions);
             res.jsonp(questions);
         }
     });

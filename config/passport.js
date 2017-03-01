@@ -6,53 +6,80 @@ var mongoose = require('mongoose'),
     GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
     User = mongoose.model('User'),
     config = require('./config');
+    var passportJWT = require("passport-jwt"),
+     ExtractJwt = passportJWT.ExtractJwt,
+     Strategy = passportJWT.Strategy;
 
 
 module.exports = function(passport) {
     //Serialize sessions
-    passport.serializeUser(function(user, done) {
-        done(null, user.id);
-    });
+    // passport.serializeUser(function(user, done) {
+    //     done(null, user.id);
+    // });
 
-    passport.deserializeUser(function(id, done) {
-        User.findOne({
-            _id: id
-        }, function(err, user) {
-            user.email = null;
-            user.facebook = null;
-            user.hashed_password = null;
-            done(err, user);
-        });
+    // passport.deserializeUser(function(id, done) {
+    //     User.findOne({
+    //         _id: id
+    //     }, function(err, user) {
+    //         user.email = null;
+    //         user.facebook = null;
+    //         user.hashed_password = null;
+    //         done(err, user);
+    //     });
+    // });
+
+    var cookieExtractor = function(req) {
+        var token = null;
+        if (req && req.cookies) token = req.cookies["jwt"];
+        return token;
+    };
+
+    var params = {
+        secretOrKey: config.jwtSecret,
+        jwtFromRequest: cookieExtractor//ExtractJwt.fromAuthHeader()
+    }
+    var strategy = new Strategy(params, function(payload, done) { 
+          User.findOne({id: payload._id}, function(err, user) {
+            if (err) {
+                return done(err, false);
+            }
+            if (user) {
+                done(null, user);
+            } else {
+                done(null, false);
+            }
+            })
     });
+    passport.use(strategy);
 
     //Use local strategy
-    passport.use(new LocalStrategy({
-            usernameField: 'email',
-            passwordField: 'password'
-        },
-        function(email, password, done) {
-            User.findOne({
-                email: email
-            }, function(err, user) {
-                if (err) {
-                    return done(err);
-                }
-                if (!user) {
-                    return done(null, false, {
-                        message: 'Unknown user'
-                    });
-                }
-                if (!user.authenticate(password)) {
-                    return done(null, false, {
-                        message: 'Invalid password'
-                    });
-                }
-                user.email = null;
-                user.hashed_password = null;
-                return done(null, user);
-            });
-        }
-    ));
+    // passport.use(new LocalStrategy({
+    //         usernameField: 'email',
+    //         passwordField: 'password'
+    //     },
+    //     function(email, password, done) {
+    //         User.findOne({
+    //             email: email
+    //         }, function(err, user) {
+    //             if (err) {
+    //                 return done(err);
+    //             }
+    //             if (!user) {
+    //                 return done(null, false, {
+    //                     message: 'Unknown user'
+    //                 });
+    //             }
+    //             if (!user.authenticate(password)) {
+    //                 return done(null, false, {
+    //                     message: 'Invalid password'
+    //                 });
+    //             }
+    //             user.email = null;
+    //             user.hashed_password = null;
+    //             return done(null, user);
+    //         });
+    //     }
+    // ));
 
     //Use twitter strategy
     passport.use(new TwitterStrategy({

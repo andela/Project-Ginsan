@@ -1,4 +1,5 @@
 var async = require('async');
+var config = require('./config');
 
 module.exports = function(app, passport, auth) {
     //User Routes
@@ -7,6 +8,7 @@ module.exports = function(app, passport, auth) {
     app.get('/signup', users.signup);
     app.get('/chooseavatars', users.checkAvatar);
     app.get('/signout', users.signout);
+    app.post('/auth/login', users.authenticate);
 
     //Setting up the users api
     app.post('/users', users.create);
@@ -20,8 +22,8 @@ module.exports = function(app, passport, auth) {
         failureFlash: 'Invalid email or password.'
     }), users.session);
 
-    app.get('/users/me', users.me);
-    app.get('/users/:userId', users.show);
+    app.get('/users/me', passport.authenticate("jwt", { session: false, failureRedirect: '/signin' }) , users.me);
+    app.get('/users/:userId', passport.authenticate("jwt", { session: false, failureRedirect: '/signin' })  ,users.show);
 
     //Setting the facebook oauth routes
     app.get('/auth/facebook', passport.authenticate('facebook', {
@@ -67,17 +69,18 @@ module.exports = function(app, passport, auth) {
     //Finish with setting up the userId param
     app.param('userId', users.user);
 
+    
     // Answer Routes
     var answers = require('../app/controllers/answers');
-    app.get('/answers', answers.all);
-    app.get('/answers/:answerId', answers.show);
+    app.get('/answers', passport.authenticate("jwt", { session: false, failureRedirect: '/signin' }) , answers.all);
+    app.get('/answers/:answerId', passport.authenticate("jwt",{ session: false, failureRedirect: '/signin' }) ,answers.show);
     // Finish with setting up the answerId param
     app.param('answerId', answers.answer);
 
     // Question Routes
     var questions = require('../app/controllers/questions');
-    app.get('/questions', questions.all);
-    app.get('/questions/:questionId', questions.show);
+    app.get('/questions', passport.authenticate("jwt", { session: false, failureRedirect: '/signin' }) ,questions.all);
+    app.get('/questions/:questionId',passport.authenticate("jwt", { session: false, failureRedirect: '/signin' }) ,questions.show);
     // Finish with setting up the questionId param
     app.param('questionId', questions.question);
 
