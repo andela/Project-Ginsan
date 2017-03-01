@@ -4,6 +4,8 @@
 var mongoose = require('mongoose'),
   User = mongoose.model('User');
 var avatars = require('./avatars').all();
+var config = require('../../config/config');
+var jwt = require('jwt-simple');
 
 /**
  * Auth callback
@@ -186,3 +188,31 @@ exports.user = function(req, res, next, id) {
       next();
     });
 };
+
+exports.authenticate =  function(req, res) {  
+  if(req.body.email && req.body.password){
+        var email = req.body.email;
+        var password = req.body.password;
+
+          User.findOne({
+            email: req.body.email
+          }, function(err, user) {
+            if (err) throw err;
+
+            if (!user) {
+              res.send({ success: false, message: 'Authentication failed. User not found.' });
+            } else {
+                var payload = {
+                    id: user._id
+                };
+                var token = jwt.encode(payload, config.jwtSecret);
+                res.cookie('jwt',token);
+                res.redirect('/');
+            }
+          });
+  }
+  else{
+         res.send({ success: false, message: 'Authentication failed. Password or email doesnt exist.' });
+  }
+
+}
