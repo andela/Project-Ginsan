@@ -1,6 +1,6 @@
 /**
  * Module dependencies.
- */
+
 var should = require('should'),
     app = require('../../server'),
     mongoose = require('mongoose'),
@@ -10,6 +10,7 @@ var should = require('should'),
 //Globals
 var user;
 var article;
+
 
 //The tests
 describe('<Unit Test>', function() {
@@ -56,3 +57,4 @@ describe('<Unit Test>', function() {
         });
     });
 });
+ */
