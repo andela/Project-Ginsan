@@ -14,8 +14,9 @@
   },
   "scripts": {
     "eslint": "./node_modules/.bin/eslint server.js",
+    "eslint-fix": "./node_modules/.bin/eslint --fix server.js",
     "start": "node node_modules/grunt-cli/bin/grunt",
-    "test": "npm run eslint && node node_modules/grunt-cli/bin/grunt test",
+    "test": "node node_modules/grunt-cli/bin/grunt test",
     "postinstall": "node node_modules/grunt-cli/bin/grunt install"
   },
   "dependencies": {
