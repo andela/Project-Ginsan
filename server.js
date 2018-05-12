@@ -20,7 +20,28 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
     mongoose = require('mongoose');
 
 //Bootstrap db connection
-var db = mongoose.connect(config.db);
+//var db = mongoose.connect(config.db);
+
+//my own way for mongoose connection
+const dbURI = 'mongodb://localhost/andela'
+const dbase = mongoose.connection;
+
+//connect to the local database
+var db = mongoose.connect(dbURI || process.env.MONGODB_URI);
+dbase.on('error', (error) => {
+    console.log('database connection error:' + error);
+});
+dbase.on('disconnected', () => {
+
+});
+process.on('unhandledRejection', (reason, p) => {
+    console.log('Unhandled Rejection at: Promise', p, 'reason: ', reason);
+    // db.close(() => {
+    //     console.log('mongoose is disconnected through the app');
+    //     process.exit(0);
+    // });
+});
+
 
 //Bootstrap models
 var models_path = __dirname + '/app/models';
@@ -44,7 +65,7 @@ require('./config/passport')(passport);
 
 var app = express();
 
-app.use(function(req, res, next){
+app.use(function(req, res, next) {
     next();
 });
 
