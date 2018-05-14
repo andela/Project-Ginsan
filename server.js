@@ -27,7 +27,8 @@ const dbURI = 'mongodb://localhost/andela'
 const dbase = mongoose.connection;
 
 //connect to the local database
-var db = mongoose.connect(dbURI || process.env.MONGODB_URI);
+mongoose.connect(dbURI || process.env.MONGODB_URI);
+
 dbase.on('error', (error) => {
     console.log('database connection error:' + error);
 });
