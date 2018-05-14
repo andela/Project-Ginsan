@@ -90,4 +90,9 @@ module.exports = function(app, passport, auth) {
     app.get('/play', index.play);
     app.get('/', index.render);
 
+    //Group chat routes
+    let groupChat = require('../app/controllers/group-chats');
+    app.get('/messages', groupChat.getAllChats);
+    app.post('/createmessage', groupChat.createMessage);
+
 };
