@@ -4,7 +4,8 @@
 var should = require('should'),
     app = require('../../server'),
     mongoose = require('mongoose'),
-    User = mongoose.model('User');
+    User = require('../../app/models/user');
+
 
 //Globals
 var user;

@@ -96,7 +96,7 @@ UserSchema.methods = {
         if (!plainText || !this.hashed_password) {
             return false;
         }
-        return bcrypt.compareSync(plainText,this.hashed_password);
+        return bcrypt.compareSync(plainText, this.hashed_password);
     },
 
     /**
@@ -112,4 +112,6 @@ UserSchema.methods = {
     }
 };
 
-mongoose.model('User', UserSchema);
+const user = mongoose.model('User', UserSchema);
+
+module.exports = user;
