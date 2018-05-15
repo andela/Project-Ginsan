@@ -13,12 +13,14 @@ describe('Game Constructor', function() {
 	});
 
 	describe('Game properties', function() {
-		it('should check properties of the constructor', function() {
+
+		it('should check for properties of the constructor', function() {
 			(game).should.have.property('czar');
+			(game).should.have.property('players');
 			(game.payload).should.be.a('function');
 		});
 
-		it('should return an object with properties', function() {
+		it('should return an object with properties when payload is invoked', function() {
 			var data = game.payload();
 
 			(data).should.have.property('gameWinner');
@@ -34,6 +36,16 @@ describe('Game Constructor', function() {
 
 			sinon.assert.calledOnce(_findPlayerIndexBySocketStub);
 			_findPlayerIndexBySocketStub.restore();
+		});
+
+		it('should test that sendUpdate method was called once', function() {
+			var winner = 'Dave Scot',
+				sendUpdateStub = sinon.stub(game, 'sendUpdate');
+
+			game.stateEndGame(winner);
+
+			sinon.assert.calledOnce(sendUpdateStub);
+			sendUpdateStub.restore();
 		});
 	});
 });
