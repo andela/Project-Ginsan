@@ -9,18 +9,14 @@ var should = require('should'),
 //Globals
 var user;
 
-function getRandomString() {
-    return Math.random().toString(36).substring(7)
-}
-
 //The tests
 describe('<Unit Test>', function() {
-    xdescribe('Model User:', function() {
+    describe('Model User:', function() {
         before(function(done) {
             user = new User({
                 name: 'John Doe',
                 email: 'johndoe@gmail.com',
-                username: getRandomString(),
+                username: 'johnny',
                 password: 'john'
             });
 
@@ -28,7 +24,7 @@ describe('<Unit Test>', function() {
         });
 
         describe('Method Save', function() {
-            it('should be able to save without problems', function(done) {
+            xit('should be able to save without problems', function(done) {
                 return user.save(function(err) {
                     should.not.exist(err);
                     done();
