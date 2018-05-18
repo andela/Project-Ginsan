@@ -38,7 +38,6 @@ describe('<Unit Test>', function() {
                     done();
                 });
             });
-        });
 
             it('should be able to show an error when trying to save without a valid email', function(done) {
                 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -48,7 +47,6 @@ describe('<Unit Test>', function() {
                     done();
                 });
             });
-        });
 
             it('should be able to show an error when trying to save without password', function(done) {
                 user.password = '';
