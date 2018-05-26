@@ -14,6 +14,7 @@ describe('Get Landing Page', function(){
 	});
 
 
+//check the sign up page
 	it('should return 200', function (done) {
 	  request.get(socketUrl+'/signup', function (err, res, body){
 	    expect(res.statusCode).to.equal(200);
@@ -21,6 +22,8 @@ describe('Get Landing Page', function(){
 	    done();
 	  });
 	});
+
+	//check the sign in page url routing
 
 	it('should return 200', function (done) {
 	  request.get(socketUrl+'/signin', function (err, res, body){
@@ -33,7 +36,7 @@ describe('Get Landing Page', function(){
 
 
 
-
+//
 describe('Sign In', function(){
 	it('it should return 302 because of the redirect', function (done) {
 	  request.post(socketUrl+'/users/session', function (err, res, body){

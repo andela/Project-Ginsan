@@ -9,7 +9,7 @@ browser = new Browser();
 
 var server = null;
 
-describe("login using social sites",function () {
+describe("<Functional Test>",function () {
 
     this.timeout(0);
 
