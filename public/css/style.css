@@ -172,6 +172,21 @@
    padding: 5px 5px 5px 13px;
 }
 
+#landing-logo-mine 
+{
+    margin: 5px 0 5px 0px;
+  
+   
+   border-radius: 8px;
+   background: #252525;
+   padding: 5px 5px 5px 13px;
+}
+
+.logo-text {
+   font-family: 'Lobster', cursive;
+   font-size: 28px;
+}
+
 #first-word {
    color: #7CE4E8;
 }
@@ -232,6 +247,9 @@
    margin-right: 35px;
  }
 
+
+
+
  .wpb-menu-container .wpb-main-menu li {
    display: inline-block;
    height: 100%;
@@ -246,6 +264,50 @@
    -ms-transition: color 0.5s ease;
    -o-transition:  color 0.5s ease;
    transition:  color 0.5s ease;
+ }
+#landing-logo   li a {
+   
+  
+   font-weight: bold;
+   color: white;
+   padding: 0px 10px;
+   -webkit-transition: color 0.5s ease;
+   -moz-transition: color 0.5s ease;
+   -ms-transition: color 0.5s ease;
+   -o-transition:  color 0.5s ease;
+   transition:  color 0.5s ease;
+   text-transform: uppercase;
+   position: relative;
+   z-index:1000;
+   float:left !important;
+   font-size: 11px !important;
+ }
+
+#landing-logo-mine  li a{
+  font-weight: bold;
+   color: white;
+   padding: 0px 10px;
+   -webkit-transition: color 0.5s ease;
+   -moz-transition: color 0.5s ease;
+   -ms-transition: color 0.5s ease;
+   -o-transition:  color 0.5s ease;
+   transition:  color 0.5s ease;
+   text-transform: uppercase;
+   
+   float:left !important;
+   font-size: 11px !important; 
+}
+
+#landing-logo-mine  li a:hover {
+   color: #2ECC71 !important;
+   -webkit-transition: color 0.5s ease;
+   -moz-transition: color 0.5s ease;
+   -ms-transition: color 0.5s ease;
+   -o-transition:  color 0.5s ease;
+   transition:  color 0.5s ease;
+ }
+ #landing-logo-mine li {
+   line-height: 45px !important; 
  }
 
  .wpb-menu-container .wpb-main-menu li a {
@@ -929,7 +991,7 @@
 
  .foot {
    bottom: 0;
-   max-width: 1400px;
+  /* max-width: 1400px;*/
    border-radius: 8px;
    background: #252525;
    padding: 5px 5px 5px 13px;
@@ -1000,7 +1062,7 @@
 }
 
 #donations {
-   margin-top: 160px;
+  /* margin-top: 160px;*/
 }
 
 /*MORE MEDIA QUERIESS WHOOOOOAAAA*/
@@ -1243,7 +1305,7 @@
    .foot {
       bottom: 0;
       max-width: 1400px;
-      height: 60px;
+      /*height: 60px;*/
       border-radius: 8px;
       background: #252525;
       padding: 5px 5px 5px 13px;
@@ -1255,3 +1317,107 @@
       margin: 0 0 0 4px;
    }
  }
+
+
+.container{
+   width: 100% !important;
+}
+
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+  width:90% !important;
+  margin: 0 auto !important;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.topnav .icon {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child) {display: none;}
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .topnav.responsive {position: relative;}
+  .topnav.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+}
+
+
+
+
+
+.my-top-bar {
+   min-height: 60px;
+   max-height:300px !important;
+   background: transparent;
+   position: fixed;
+   top:0;
+   width: 100%;
+   z-index:10000;
+   max-width: 1400px;
+ }
+
+ #my-navver,#mytop-part {
+   min-height: 60px;
+   max-height:300px !important;
+}
+
+.scroll_top {
+   display:none !important;
+   visibility: hidden !important;
+ }
+
+@media screen and (max-width: 481px) {
+  
+.my-top-bar {
+   min-height: 60px;
+   max-height:300px !important;
+   background: transparent;
+   position: relative !important;
+   top:0;
+   width: 100%;
+   z-index:10000;
+   max-width: 1400px;
+ }
+
+ .scroll_top {
+   display:block !important;
+   visibility: show !important;
+ }
+}
+

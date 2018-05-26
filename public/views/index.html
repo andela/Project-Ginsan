@@ -13,35 +13,52 @@ $(document).ready(function() {
   });
 </script>
 
-<script></script>
-<div landing id="main-bod">
+<script>
+  
+  function focusHere(id)
+  {
+    //alert("This is the scroll");
+
+    //$("#how-to").focus( "slow");
+    $("#"+id).focus();
+  }
+</script>
+<div landing id="">
+
+
   <!-- Fixed Logo & Menu Bar Start -->
-  <div id="top-part">
-    <div class="wpb-top-bar">
-      <div class="mod-contain" id="navver">
+  <div id="mytop-part">
+    <div class="my-top-bar">
+      <div class="mod-contain" id="my-navver">
         <div class="row">
           <!-- Logo -->
           <div class="wpb-logo-container">
-            <div id="landing-logo">
-              <span id="first-word">Cards</span>
-              <span id="second-word"> for</span>
-              <span id="third-word">Humanity</span>
+
+            <div id="landing-logo-mine" class="row">
+              <div class="col-md-4">
+              <a href="#!">
+              <span id="first-word" class="logo-text">Cards</span>
+              <span id="second-word" class="logo-text"> for</span>
+              <span id="third-word" class="logo-text">Humanity</span>
+            </a>
+          </div>
+          <div class="col-md-8">
+                <ul class="">
+                  <li><a href="" onClick="">Home</a></li>
+                  <li><a href="" onClick="focusHere('teach_me')">How to Play</a></li>
+                  <li><a href="" onClick="focusHere('donate-charity')">Charity</a></li>
+                  <li><a href="" onClick="focusHere('my-team')">About Us</a></li>
+                  <span ng-show="showOptions">
+                    <li><a href="#!/signup">Sign Up</a></li>
+                    <li><a href="#!/signin">Sign In</a></li>
+                  </span>
+                  <span ng-hide="showOptions">
+                    <li><a href="/signout">Sign Out</a></li>
+                  </span>
+                </ul>
+          </div>
             </div>
-            <div class="col-md-9 wpb-menu-container">
-              <ul class="wpb-main-menu">
-                <li><a onClick="scroll(0,0)">Home</a></li>
-                <li><a onClick="scroll(0,742);">How to Play</a></li>
-                <li><a onClick="scroll(0,1411);">Charity</a></li>
-                <li><a onClick="scroll(0,2021);">About Us</a></li>
-                <span ng-show="showOptions">
-                  <li><a href="#!/signup">Sign Up</a></li>
-                  <li><a href="#!/signin">Sign In</a></li>
-                </span>
-                <span ng-hide="showOptions">
-                  <li><a href="/signout">Sign Out</a></li>
-                </span>
-              </ul>
-            </div>
+            
           </div>
         </div>
       </div>
@@ -49,9 +66,12 @@ $(document).ready(function() {
   </div>
 <!-- Fixed Logo & Menu Bar End -->
 
+
+
 <!-- Landing Start -->
   <div class="wpb-teaser parallax-background" id="homer">
     <div class="background-opacity"></div>
+    <div class="row">
     <div class="container">
       <div class="row" id="main-text">
         <div class="col-md-12" id="avatars" ng-controller="IndexController">
@@ -124,12 +144,14 @@ $(document).ready(function() {
       </div>
     </div>
   </div>
+  </div>
 <!-- Landing End -->
 
 
 <!-- How to Play Start -->
-<section id="how-to">
-  <div class="wpb-teaser parallax-background" id="how-to-play">
+<section id="how-to" tabindex="0">
+  <div tabindex="0" id="teach_me"></div>
+  <div class="wpb-teaser parallax-background" id="how-to-play" tabindex="0">
     <div class="background-opacity"></div>
 
     <div class="container" id="how-to-container">
@@ -144,12 +166,13 @@ $(document).ready(function() {
         <!-- Teaser Slogan End -->
 
         <!-- Teaser Text Start -->
-        <div id="card-list">
+        <div class="row" id="card-list">
           <div id="how-to-cards">
-            <div class="landing-card how-to">Each player begins with, and will always have, 10 white answer cards.</div>
-            <div class="landing-card how-to">For each round, one player is randomly chosen as the Card Czar.</div>
-            <div class="landing-card how-to">Everyone else answers the black question card by clicking on the answer card they want to use.</div>
-            <div class="landing-card how-to">The Card Czar then picks a favorite answer, and whoever played that answer wins the round.</div>
+            <div class="col-md-2"></div>
+            <div class="landing-card how-to col-md-2">Each player begins with, and will always have, 10 white answer cards.</div>
+            <div class="landing-card how-to col-md-2">For each round, one player is randomly chosen as the Card Czar.</div>
+            <div class="landing-card how-to col-md-2">Everyone else answers the black question card by clicking on the answer card they want to use.</div>
+            <div class="landing-card how-to col-md-2">The Card Czar then picks a favorite answer, and whoever played that answer wins the round.</div>
           </div>
         </div>
        <!-- Teaser Text End -->
@@ -175,7 +198,8 @@ $(document).ready(function() {
 
 <!-- Donation Info Start -->
 <section class="wpb-contact-us parallax-background-contact" id="donations">
-   <div class="wpb-teaser parallax-background" id="about-team">
+<div tabindex="0" id="donate-charity"></div>
+   <div class="wpb-teaser parallax-background" id="about-team" tabindex="0">
     <div class="background-opacity"></div>
 
     <div class="container" id="how-to-container">
@@ -211,7 +235,8 @@ $(document).ready(function() {
 
 <!-- About Us Start -->
 <section class="wpb-contact-us parallax-background-contact" id="team">
-   <div class="wpb-teaser parallax-background" id="about-team">
+  <div tabindex="0" id="my-team"></div>
+   <div class="wpb-teaser parallax-background" id="about-team" >
     <div class="background-opacity"></div>
 
     <div class="container" id="how-to-container">
@@ -255,3 +280,10 @@ $(document).ready(function() {
 </section>
 <!-- Footer End -->
 </div>
+
+<a href=”#” class=”back-to-top” style=”display: inline;”>
+ 
+<div class="scroll_top">Top</div>
+ 
+</a>
+

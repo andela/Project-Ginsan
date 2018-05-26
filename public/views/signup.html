@@ -7,9 +7,11 @@
           <!-- Logo -->
           <div class="wpb-logo-container">
             <div id="landing-logo"> 
+              <a href="#!">
               <span id="first-word">Cards</span>
               <span id="second-word"> for</span> 
               <span id="third-word">Humanity</span> 
+            </a>
             </div> 
             <div class="col-md-9 wpb-menu-container">
               <ul class="wpb-main-menu">
@@ -63,14 +65,14 @@
             <div id="contain-avatars">
               <ul ng-controller="IndexController" class="avatar-list">
                 <li ng-repeat="avatar in avatars" class="avatars ng-scope">
-                  <input name="avatar" type='radio' value="{{$index}}">
-                    <img ng-src="{{avatar}}">
+                  <input name="avatar" type='radio' value="{{$index}}" id="{{$index}}">
+                    <label for="{{$index}}"><img ng-src="{{avatar}}" ></label>
                   </input>
                 </li>
               </ul>
             </div>
             <div class="form-actions">
-              <button id="sign-up-btn-other" type='submit'>Sign Up</button>
+              <button id="sign-up-btn-other" type='submit' name="signup">Sign Up</button>
             </div>
           </form>
         </div>

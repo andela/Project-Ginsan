@@ -3,23 +3,23 @@
         "name": "Cards for Humanity - Development"
     },
     "facebook": {
-        "clientID": "APP_ID",
-        "clientSecret": "APP_SECRET",
-        "callbackURL": "http://cardsforhumanity.com:3000/auth/facebook/callback"
+        "clientID": "164983157676556",
+        "clientSecret": "27c3c4ca024f6695d5363bfa4cacb57d",
+        "callbackURL": "http://127.0.0.1:3000/auth/facebook/callback"
     },
     "twitter": {
         "clientID": "CONSUMER_KEY",
         "clientSecret": "CONSUMER_SECRET",
-        "callbackURL": "http://cardsforhumanity.com:3000/auth/twitter/callback"
+        "callbackURL": "http://127.0.0.1:3000/auth/twitter/callback"
     },
     "github": {
         "clientID": "APP_ID",
         "clientSecret": "APP_SECRET",
-        "callbackURL": "http://cardsforhumanity.com:3000/auth/github/callback"
+        "callbackURL": "http://127.0.0.1:3000/auth/github/callback"
     },
     "google": {
         "clientID": "APP_ID",
         "clientSecret": "APP_SECRET",
-        "callbackURL": "http://cardsforhumanity.com:3000/auth/google/callback"
+        "callbackURL": "http://127.0.0.1:3000/auth/google/callback"
     }
 }
