@@ -24,6 +24,13 @@ describe('<Unit Test>', function() {
         });
 
         describe('Method Save', function() {
+
+            it('should create user model correctly', function(done) {
+                //check user email here against what was created
+                user.email.should.equal('test@test.com');
+                done();
+            });
+
             it('should be able to save whithout problems', function(done) {
                 return user.save(function(err) {
                     should.not.exist(err);
@@ -39,6 +46,27 @@ describe('<Unit Test>', function() {
                 });
             });
         });
+
+        it('should throw an error when you try to save without passoword', function(done) {
+            //set password to empty value
+            user.password = '';
+            //save and check if error exist
+            return user.save(function(err) {
+                should.exist(err);
+                done();
+            });
+        });
+
+        it('should throw an error when user premium value is not numeric', function(done) {
+              //set name to empty value
+              user.premium = 'premium';
+              //save and check if error exist
+              return user.save( (err)=>{
+                  should.exist(err);
+                  done();
+              });
+          });
+    });
 
         after(function(done) {
             done();
