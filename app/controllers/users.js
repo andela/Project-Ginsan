@@ -4,6 +4,11 @@
 var mongoose = require('mongoose'),
   User = mongoose.model('User');
 var avatars = require('./avatars').all();
+//add a jwt
+var jwt = require('jsonwebtoken');
+//add some config
+var config = require('../../config/config');
+var passport = require('passport');
 
 /**
  * Auth callback
@@ -49,6 +54,32 @@ exports.session = function(req, res) {
   res.redirect('/');
 };
 
+////////////////new login////////////////
+
+exports.session_new=function(req,res,next)
+{
+  passport.authenticate('local',function(err, user, info)
+          {     
+             if(err || !user)
+              {
+                //return next(err);
+                res.redirect('/signin');
+              }
+            req.login(user, { sesson : false }, function (error)
+            {
+                if( error ) return next(error)
+                    //get all the claims to pass into the jwt
+                var body = { _id : user._id, email : user.email };
+                   //create the token
+                var token=jwt.sign({user:body},config.token_secret);
+              
+                return res.redirect('/api/auth/login');
+
+            });     
+        })(req, res);
+
+};
+////////////////end of new login////////////
 /** 
  * Check avatar - Confirm if the user who logged in via passport
  * already has an avatar. If they don't have one, redirect them
@@ -70,41 +101,118 @@ exports.checkAvatar = function(req, res) {
     // If user doesn't even exist, redirect to /
     res.redirect('/');
   }
-
 };
-
 /**
  * Create user
- */
-exports.create = function(req, res) {
-  if (req.body.name && req.body.password && req.body.email) {
+*/
+exports.create = function(req, res) 
+{
+  
+  if (req.body.name && req.body.password && req.body.email) 
+  {
     User.findOne({
       email: req.body.email
-    }).exec(function(err,existingUser) {
-      if (!existingUser) {
+    }).exec(function(err,existingUser) 
+    {
+      if (!existingUser) 
+      {
         var user = new User(req.body);
         // Switch the user's avatar index to an actual avatar url
         user.avatar = avatars[user.avatar];
         user.provider = 'local';
-        user.save(function(err) {
-          if (err) {
+        user.save(function(err)
+         {
+          if (err) 
+          {
             return res.render('/#!/signup?error=unknown', {
               errors: err.errors,
               user: user
             });
           }
-          req.logIn(user, function(err) {
+          req.logIn(user, function(err) 
+          {
             if (err) return next(err);
-            return res.redirect('/#!/');
+            var token=jwt.sign({token:req.body},config.token_secret);
+          
+            //if the user has been created
+            if(user)
+            {
+              jwt.verify(token,config.token_secret,function(err)
+              {
+               if(err) console.log("token not verified");
+                console.log(token+" has been verified");
+                return res.redirect('/#!/');
+              });
+              
+            }
+           
           });
         });
-      } else {
+      } 
+      else {
         return res.redirect('/#!/signup?error=existinguser');
       }
     });
   } else {
     return res.redirect('/#!/signup?error=incomplete');
   }
+};
+
+//create user..with jwt session
+exports.create_user=function(req,res)
+{
+
+      if(req.body.name && req.body.password && req.body.email) 
+      {
+        User.findOne({
+          email: req.body.email
+        }).exec(function(err,existingUser) 
+        {
+          if (!existingUser) 
+          {
+            var user = new User(req.body);
+
+            // Switch the user's avatar index to an actual avatar url
+            user.avatar = avatars[user.avatar];
+            user.provider = 'local';
+            user.save(function(err)
+             {
+              if (err) 
+              {
+                return res.render('/#!/signup?error=unknown', {
+                  errors: err.errors,
+                  user: user
+                });
+              }
+              req.logIn(user, function(err) 
+              {
+                if (err) return next(err);
+                var token=jwt.sign({token:req.body},config.token_secret);
+              
+                //if the user has been created
+                if(user)
+                {
+                  jwt.verify(token,config.token_secret,function(err)
+                  {
+                   if(err) console.log("token not verified");
+                   
+                    return res.redirect('/api/auth/signup');
+                    
+                  });
+                  
+                }
+               
+              });
+            });
+          } 
+          else {
+            return res.redirect('/#!/signup?error=existinguser');
+          }
+        });
+      } else {
+        return res.redirect('/#!/signup?error=incomplete');
+      }
+
 };
 
 /**
