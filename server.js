@@ -1,11 +1,13 @@
 /**
  * Module dependencies.
  */
-var express = require('express'),
+//import express from 'express'; 
+ var express = require('express'),
     fs = require('fs'),
     passport = require('passport'),
     logger = require('mean-logger'),
     io = require('socket.io');
+
 
 /**
  * Main application entry file.
@@ -19,14 +21,16 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
     auth = require('./config/middlewares/authorization'),
     mongoose = require('mongoose');
 
+    //path to the file with the routes
+    var route=require('./config/routes');
+
 //Bootstrap db connection
 var db = mongoose.connect(config.db,function(err)
     {
-        if (err){
-            console.log(err);
-        }
+      if(err) console.log(err);
 
-        console.log("connection successful");
+      console.log("connection made successfully");
+
     });
 
 //Bootstrap models
@@ -54,12 +58,14 @@ var app = express();
 app.use(function(req, res, next){
     next();
 });
-
 //express settings
 require('./config/express')(app, passport, mongoose);
 
 //Bootstrap routes
 require('./config/routes')(app, passport, auth);
+
+//authenticate using the tokens
+app.use('/routes', passport.authenticate('jwt', {session: false}), route);
 
 //Start the app by listening on <port>
 var port = config.port;
@@ -72,5 +78,4 @@ console.log('Express app started on port ' + port);
 //Initializing logger
 logger.init(app, passport, mongoose);
 
-//expose app
-exports = module.exports = app;
+module.exports = app;
