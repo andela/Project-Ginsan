@@ -7,12 +7,14 @@ var express = require('express'),
     helpers = require('view-helpers'),
     config = require('./config');
 
-module.exports = function(app, passport, mongoose) {
+module.exports = function(app, passport, mongoose) 
+{
     app.set('showStackError', true);
 
     //Should be placed before express.static
     app.use(express.compress({
-        filter: function(req, res) {
+        filter: function(req, res) 
+        {
             return (/json|text|javascript|css/).test(res.getHeader('Content-Type'));
         },
         level: 9
@@ -34,24 +36,23 @@ module.exports = function(app, passport, mongoose) {
     //Enable jsonp
     app.enable("jsonp callback");
 
-    app.configure(function() {
+    app.configure(function() 
+    {
         //cookieParser should be above session
+       
         app.use(express.cookieParser());
 
         //bodyParser should be above methodOverride
         app.use(express.bodyParser());
         app.use(express.methodOverride());
 
-        //express/mongo session storage
+        //express/mongo session storage--sessions are never used---
+        /////////////////1.0//////////////////////////                
         app.use(express.session({
-            secret: 'MEAN',
-            store: new mongoStore({
-                url: config.db,
-                collection: 'sessions',
-                mongoose_connection: mongoose.connection.db
-            })
+            secret: 'MEAN'
         }));
 
+        //////////////////////2.0//////////////////
         //connect flash for flash messages
         app.use(flash());
 
@@ -60,6 +61,7 @@ module.exports = function(app, passport, mongoose) {
 
         //use passport session
         app.use(passport.initialize());
+        //////////////////3.0//////////////////
         app.use(passport.session());
 
         //routes should be at the last
