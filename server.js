@@ -20,7 +20,14 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
     mongoose = require('mongoose');
 
 //Bootstrap db connection
-var db = mongoose.connect(config.db);
+var db = mongoose.connect(config.db,function(err)
+    {
+        if (err){
+            console.log(err);
+        }
+
+        console.log("connection successful");
+    });
 
 //Bootstrap models
 var models_path = __dirname + '/app/models';
