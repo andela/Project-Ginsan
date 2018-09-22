@@ -25,7 +25,7 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
     var route=require('./config/routes');
 
 //Bootstrap db connection
-var db = mongoose.connect(config.db,function(err)
+var db = mongoose.connect(config.db,{ useNewUrlParser: true },function(err)
     {
       if(err) console.log(err);
 
