@@ -39,9 +39,10 @@ describe('<Unit Test>', function() {
                 });
             });
         });
-
-        after(function(done) {
-            done();
-        });
+         //remove the inserted user
+          after(function(done){
+          user.remove();
+          return done();
+         });
     });
 });
