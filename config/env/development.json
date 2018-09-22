@@ -13,13 +13,13 @@
         "callbackURL": "http://cardsforhumanity.com:3000/auth/twitter/callback"
     },
     "github": {
-        "clientID": "9234303c4410291a02e8",
-        "clientSecret": "2d05f723751a95f152c4af9129a7bbb6f216917c",
+        "clientID": "API_CLIENT",
+        "clientSecret": "API_SECRET",
         "callbackURL": "http://127.0.0.1/auth/github/callback"
     },
     "google": {
-        "clientID": "362600994523-d5d3pid64ccp6sj6pm07spps8b3helgq.apps.googleusercontent.com",
-        "clientSecret": "gY3me2lD2Gvujy4Jw_EgGMo3",
+        "clientID": "API_CLIENT",
+        "clientSecret": "API_SECRET",
         "callbackURL": "http://127.0.0.1:3000/auth/google/callback"
     }
 }
