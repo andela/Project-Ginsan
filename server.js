@@ -25,11 +25,12 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
     var route=require('./config/routes');
 
 //Bootstrap db connection
+//use the new arguments--old is deprecated.
 var db = mongoose.connect(config.db,{ useNewUrlParser: true },function(err)
     {
       if(err) console.log(err);
 
-      console.log("connection made successfully");
+      //console.log("connection made successfully");
 
     });
 
@@ -78,4 +79,4 @@ console.log('Express app started on port ' + port);
 //Initializing logger
 logger.init(app, passport, mongoose);
 
-module.exports = app;
+module.exports =app;
