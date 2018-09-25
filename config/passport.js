@@ -4,11 +4,20 @@ var mongoose = require('mongoose'),
     FacebookStrategy = require('passport-facebook').Strategy,
     GitHubStrategy = require('passport-github').Strategy,
     GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
+     //add the passport-jwt strategy
+    passportjwtStrategy=require('passport-jwt').Strategy,
+    ExtractJwt=require('passport-jwt').ExtractJwt,
     User = mongoose.model('User'),
-    config = require('./config');
+    config = require('./config');   
+     
+    //set the options needed to be extracted from the token 
+    var opts = {}
+    opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+    opts.secretOrKey = config.token_secret;
+    
 
 
-module.exports = function(passport) {
+    module.exports = function(passport) {
     //Serialize sessions
     passport.serializeUser(function(user, done) {
         done(null, user.id);
@@ -183,4 +192,20 @@ module.exports = function(passport) {
             });
         }
     ));
+
+    //jwt strategy
+    passport.use(new passportjwtStrategy(opts,function(jwt_payload, done)
+    {
+      //get the user
+      return User.findOne({id:jwt_payload.sub},function(err,user)
+      {
+          if(err) console.log(err);
+          if(user)
+          {
+            console.log("The user is found");
+           // return done(null,user);
+          }
+      });
+    }));  
+
 };

@@ -1,24 +1,49 @@
 var async = require('async');
+//add a jwt
+var jwt = require('jsonwebtoken');
+//get the config for this
+var config = require('./config');
 
-module.exports = function(app, passport, auth) {
+
+module.exports = function(app, passport, auth) 
+{
     //User Routes
     var users = require('../app/controllers/users');
+
     app.get('/signin', users.signin);
     app.get('/signup', users.signup);
     app.get('/chooseavatars', users.checkAvatar);
     app.get('/signout', users.signout);
 
-    //Setting up the users api
-    app.post('/users', users.create);
+    //Setting up the users api//////////////has been replaced by the new method////////////////////////
+    //app.post('/users', users.create);
+
     app.post('/users/avatars', users.avatars);
 
     // Donation Routes
     app.post('/donations', users.addDonation);
 
-    app.post('/users/session', passport.authenticate('local', {
-        failureRedirect: '/signin',
-        failureFlash: 'Invalid email or password.'
-    }), users.session);
+    ///////////haxs been replaced by the new session :)
+    //app.post('/users/session',users.session);
+
+    //process the user login here */
+    app.post('/users/session',users.session_new);
+
+      /* login the user. */
+    app.get('/api/auth/login', function(req, res, next) 
+    {   
+       res.redirect('/');
+    });
+///////////////////////////////////////////CREATE USER///////////////////////////////////////////
+    //create the user first
+    app.post('/users',users.create_user);
+
+    /* for user signup. *////////////////////////////////////////////////////////
+    app.get('/api/auth/signup',function(req,res,next)
+    {
+        return res.redirect('/#!/');
+    });
+///////////////////////////////////////////////////////////////////////////////
 
     app.get('/users/me', users.me);
     app.get('/users/:userId', users.show);
