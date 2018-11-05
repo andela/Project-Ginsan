@@ -1,5 +1,7 @@
+var path = require('path'),
+	webpack = require('webpack');
 module.exports = function(config) {
-	var appFiles = ['config/**/*.js', 'app/**/*.js'];
+	var appFiles = ['test/require.js', 'config/**/*.js', 'app/**/*.js'];
 
 	var testFiles = ['test/sandbox/test.js'];
 	config.set({
@@ -18,6 +20,27 @@ module.exports = function(config) {
 		files: appFiles.concat(testFiles),
 		preprocessors: {
 			'test/**/*.js': ['coverage']
+		},
+		webpack: {
+			resolve: {
+				root: [
+					path.resolve('app'),
+					path.resolve('config')
+				],
+				modulesDirectories: [
+					'app',
+					'node_modules'
+				],
+				alias: {},
+				extensions: ['', '.js', '.json']
+			},
+			module: {},
+			stats: {
+				colors: true,
+				reasons: true
+			},
+			progress: true,
+			plugins: []
 		},
 		reporters: ['progress', 'junit', 'kjhtml', 'coverage'],
 		coverageReporter: {
