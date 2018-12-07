@@ -6,22 +6,18 @@ module.exports = function(app, passport, auth) {
     app.get('/signin', users.signin);
     app.get('/signup', users.signup);
     app.get('/chooseavatars', users.checkAvatar);
-    app.get('/signout', users.signout);
+
+    app.post('/users/avatars', passport.authenticate('jwt', { session: false }), users.avatars);
+    app.post('/donations', passport.authenticate('jwt', { session: false }), users.addDonation);
+    app.get('/users/me', passport.authenticate('jwt', { session: false }), users.me);
+    app.get('/users/:userId', passport.authenticate('jwt', { session: false }), users.show);
 
     //Setting up the users api
     app.post('/users', users.create);
-    app.post('/users/avatars', users.avatars);
 
-    // Donation Routes
-    app.post('/donations', users.addDonation);
-
-    app.post('/users/session', passport.authenticate('local', {
-        failureRedirect: '/signin',
-        failureFlash: 'Invalid email or password.'
-    }), users.session);
-
-    app.get('/users/me', users.me);
-    app.get('/users/:userId', users.show);
+    // Local Auth route
+    app.post('/auth/login', users.login);
+    app.post('/auth/signup', users.create);
 
     //Setting the facebook oauth routes
     app.get('/auth/facebook', passport.authenticate('facebook', {
