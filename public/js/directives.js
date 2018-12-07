@@ -72,7 +72,7 @@ angular.module('mean.directives', [])
         scope.showOptions = true;
         scope.logOut = function(){
           AuthService.Logout();
-        }
+        };
         if (scope.$$childHead.global.authenticated === true) {
           scope.showOptions = false;
         }

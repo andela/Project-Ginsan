@@ -19,23 +19,25 @@ angular.module('mean.system')
 
     $scope.signIn = function(user){
       if (!user.email || !user.password) {
-        return $scope.showErrorMessage = true;
+        $scope.showErrorMessage = true;
+      }else{
+        AuthService.Login(user.email, user.password, function(state){
+          $scope.showErrorMessage = !state;
+        });
       }
-      AuthService.Login(user.email, user.password, function(state){
-        $scope.showErrorMessage = !state;
-      });
     };
 
     $scope.signUp = function(user){
       if (!user.name || !user.email || !user.password) {
-        return $scope.showErrorMessage = true;
+        $scope.showErrorMessage = true;
+      }else{
+        AuthService.Register(user.name, user.email, user.password, user.avatar, function(state, data){
+          if(!state){
+            $scope.errorMessage = data.data.error;
+            $scope.showErrorMessage = true;
+          }
+        });
       }
-      AuthService.Register(user.name, user.email, user.password, user.avatar, function(state, data){
-        if(!state){
-          $scope.errorMessage = data.data.error;
-          $scope.showErrorMessage = true;
-        }
-      });
     };
 
 

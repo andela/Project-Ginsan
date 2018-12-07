@@ -91,7 +91,7 @@ exports.create = function(req, res) {
         user.save(function(err) {
           // We should log errors here for inspection
           if (err) {
-            return res.status(400).json({ data: { error: "Oops, An error occured, please try again"}})
+            return res.status(400).json({ data: { error: "Oops, An error occured, please try again"}});
           }
           req.login(user, {session: false}, function(err){
             if (err) {
@@ -103,11 +103,11 @@ exports.create = function(req, res) {
           });
         });
       } else {
-        return res.status(422).json({ data: { error: "Oops, An account with this email already exist"}})
+        return res.status(422).json({ data: { error: "Oops, An account with this email already exist"}});
       }
     });
   } else {
-    return res.status(422).json({ data: { error: "All information is required"}})
+    return res.status(422).json({ data: { error: "All information is required"}});
   }
 };
 

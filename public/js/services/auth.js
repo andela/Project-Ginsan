@@ -14,7 +14,7 @@ angular.module('mean.system')
                 cb(true);
             }, function(error) {
                 cb(false);
-            })
+            });
         },
         Register: function(name, email, password, avatar, cb){
             HttpService.load({
@@ -29,7 +29,7 @@ angular.module('mean.system')
                 cb(true, success.data);
             }, function(error) {
                 cb(false, error.data);
-            })
+            });
         },
         Logout: function(){
             sessionStorage.isUserLoggedIn = 0;
@@ -37,5 +37,5 @@ angular.module('mean.system')
             sessionStorage.api_token = '';
             window.location.href = '/';
         }
-    }
-  }])
+    };
+  }]);
