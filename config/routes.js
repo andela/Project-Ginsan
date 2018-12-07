@@ -85,9 +85,4 @@ module.exports = function(app, passport, auth) {
     var avatars = require('../app/controllers/avatars');
     app.get('/avatars', avatars.allJSON);
 
-    //Home route
-    var index = require('../app/controllers/index');
-    app.get('/play', index.play);
-    app.get('/', index.render);
-
 };
