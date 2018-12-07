@@ -89,11 +89,9 @@ exports.create = function(req, res) {
         user.avatar = avatars[user.avatar];
         user.provider = 'local';
         user.save(function(err) {
+          // We should log errors here for inspection
           if (err) {
-            return res.render('/#!/signup?error=unknown', {
-              errors: err.errors,
-              user: user
-            });
+            return res.status(400).json({ data: { error: "Oops, An error occured, please try again"}})
           }
           req.login(user, {session: false}, function(err){
             if (err) {
