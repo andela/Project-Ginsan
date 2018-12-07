@@ -5,7 +5,8 @@ var express = require('express'),
     mongoStore = require('connect-mongo')(express),
     flash = require('connect-flash'),
     helpers = require('view-helpers'),
-    config = require('./config');
+    config = require('./config'),
+    authorizationMiddleware = require('./middlewares/authorization');
 
 module.exports = function(app, passport, mongoose) {
     app.set('showStackError', true);
@@ -58,9 +59,9 @@ module.exports = function(app, passport, mongoose) {
         //dynamic helpers
         app.use(helpers(config.app.name));
 
-        //use passport session
+        //Initiaize Passport and JWT Auth
         app.use(passport.initialize());
-        app.use(passport.session());
+        authorizationMiddleware.setPassportJwtAutorization();
 
         //routes should be at the last
         
