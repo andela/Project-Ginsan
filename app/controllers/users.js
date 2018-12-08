@@ -4,6 +4,8 @@
 var mongoose = require('mongoose'),
   User = mongoose.model('User');
 var avatars = require('./avatars').all();
+var jwt = require('jsonwebtoken');
+var passport = require("passport");
 
 /**
  * Auth callback
@@ -87,23 +89,25 @@ exports.create = function(req, res) {
         user.avatar = avatars[user.avatar];
         user.provider = 'local';
         user.save(function(err) {
+          // We should log errors here for inspection
           if (err) {
-            return res.render('/#!/signup?error=unknown', {
-              errors: err.errors,
-              user: user
-            });
+            return res.status(400).json({ data: { error: "Oops, An error occured, please try again"}});
           }
-          req.logIn(user, function(err) {
-            if (err) return next(err);
-            return res.redirect('/#!/');
+          req.login(user, {session: false}, function(err){
+            if (err) {
+                res.send(err);
+            }
+            // generate a signed son web token with the contents of user object and return it in the response
+            var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET );
+            return res.json({user: user, token: token });
           });
         });
       } else {
-        return res.redirect('/#!/signup?error=existinguser');
+        return res.status(422).json({ data: { error: "Oops, An account with this email already exist"}});
       }
     });
   } else {
-    return res.redirect('/#!/signup?error=incomplete');
+    return res.status(422).json({ data: { error: "All information is required"}});
   }
 };
 
@@ -185,4 +189,36 @@ exports.user = function(req, res, next, id) {
       req.profile = user;
       next();
     });
+};
+
+/**
+ * User Login
+ * Allow users to be authenticated via JSON web token
+ */
+exports.login = function(req, res, next){
+  passport.authenticate('local', { session: false }, function (err, user, info) {
+    if (!err) {
+      if (!user) {
+        return res.status(401).json({
+            data: {
+              error: "User not found"
+            }
+        });
+    }
+    req.login(user, {session: false}, function(err){
+        if (err) {
+            res.send(err);
+        }
+        // generate a signed son web token with the contents of user object and return it in the response
+         var token = jwt.sign(user.toJSON(), process.env.JWT_SECRET );
+        return res.json({user: user, token: token });
+      });
+    } else {
+        res.json({
+        data: {
+          error: "An Error Occured"
+        }
+      });
+    }
+  })(req, res);
 };

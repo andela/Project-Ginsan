@@ -1,9 +1,10 @@
 angular.module('mean.system')
   .factory('Global', [function() {
     var _this = this;
+    var user = JSON.parse(sessionStorage.user_info || null);
     _this._data = {
-        user: window.user,
-        authenticated: !! window.user
+        user: user,
+        authenticated: !!user
     };
 
     return _this._data;

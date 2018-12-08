@@ -1,6 +1,8 @@
 angular.module('mean.system')
-.controller('IndexController', ['$scope', 'Global', '$location', 'socket', 'game', 'AvatarService', function ($scope, Global, $location, socket, game, AvatarService) {
+.controller('IndexController', ['$scope', 'Global', '$location', 'socket', 'game', 'AvatarService','AuthService', function ($scope, Global, $location, socket, game, AvatarService, AuthService) {
     $scope.global = Global;
+    $scope.showErrorMessage = false;
+    $scope.errorMessage = "";
 
     $scope.playAsGuest = function() {
       game.joinGame();
@@ -14,6 +16,31 @@ angular.module('mean.system')
         return false;
       }
     };
+
+    $scope.signIn = function(user){
+      if (!user.email || !user.password) {
+        $scope.showErrorMessage = true;
+      }else{
+        AuthService.Login(user.email, user.password, function(state){
+          $scope.showErrorMessage = !state;
+        });
+      }
+    };
+
+    $scope.signUp = function(user){
+      if (!user.name || !user.email || !user.password) {
+        $scope.showErrorMessage = true;
+      }else{
+        AuthService.Register(user.name, user.email, user.password, user.avatar, function(state, data){
+          if(!state){
+            $scope.errorMessage = data.data.error;
+            $scope.showErrorMessage = true;
+          }
+        });
+      }
+    };
+
+
 
     $scope.avatars = [];
     AvatarService.getAvatars()

@@ -5,7 +5,8 @@ var express = require('express'),
     mongoStore = require('connect-mongo')(express),
     flash = require('connect-flash'),
     helpers = require('view-helpers'),
-    config = require('./config');
+    config = require('./config'),
+    authorizationMiddleware = require('./middlewares/authorization');
 
 module.exports = function(app, passport, mongoose) {
     app.set('showStackError', true);
@@ -58,12 +59,18 @@ module.exports = function(app, passport, mongoose) {
         //dynamic helpers
         app.use(helpers(config.app.name));
 
-        //use passport session
+        //Initiaize Passport and JWT Auth
         app.use(passport.initialize());
-        app.use(passport.session());
+        authorizationMiddleware.setPassportJwtAutorization();
 
         //routes should be at the last
-        app.use(app.router);
+        
+        // Move home routes to root level. Since its required to load game at '/'
+        var index = require('../app/controllers/index');
+        app.get('/play', index.play);
+        app.get('/', index.render);
+
+        app.use('/api', app.router);
 
         //Assume "not found" in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
         app.use(function(err, req, res, next) {

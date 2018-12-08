@@ -1,5 +1,5 @@
 angular.module('mean.system')
-  .factory('game', ['socket', '$timeout', function (socket, $timeout) {
+  .factory('game', ['socket', '$timeout','Global', function (socket, $timeout, Global) {
 
   var game = {
     id: null, // This player's socket ID, so we know who this player is
@@ -181,7 +181,7 @@ angular.module('mean.system')
     mode = mode || 'joinGame';
     room = room || '';
     createPrivate = createPrivate || false;
-    var userID = !!window.user ? user._id : 'unauthenticated';
+    var userID = !!Global.user ? Global.user._id : 'unauthenticated';
     socket.emit(mode,{userID: userID, room: room, createPrivate: createPrivate});
   };
 

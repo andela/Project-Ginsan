@@ -1,3 +1,7 @@
+var passportJWT = require("passport-jwt"),
+    JWTStrategy = passportJWT.Strategy,
+    ExtractJWT  = passportJWT.ExtractJwt,
+    passport    = require('passport');
 /**
  * Generic require login routing middleware
  */
@@ -31,3 +35,13 @@ exports.user = {
 //         next();
 //     }
 // };
+
+exports.setPassportJwtAutorization = function(req, res, next){
+    passport.use(new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromHeader('access-token'),
+        secretOrKey   : process.env.JWT_SECRET
+    },function (jwtPayload, cb) {
+             return cb(null, jwtPayload);
+        }
+    ));
+}
