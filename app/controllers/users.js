@@ -4,6 +4,8 @@
 var mongoose = require('mongoose'),
   User = mongoose.model('User');
 var avatars = require('./avatars').all();
+var jwt = require('jsonwebtoken');
+var passport = require("passport");
 
 /**
  * Auth callback
@@ -88,21 +90,38 @@ exports.create = function(req, res) {
         user.provider = 'local';
         user.save(function(err) {
           if (err) {
+            if(req.path==='signup'){
+              return res.status(400).json({ data: { error: "An error occurred. Please try again"}});
+            }
             return res.render('/#!/signup?error=unknown', {
               errors: err.errors,
               user: user
             });
           }
-          req.logIn(user, function(err) {
-            if (err) return next(err);
-            return res.redirect('/#!/');
+          req.login(user, {session: false}, function(err){
+            if (err) {
+                res.send(err);
+            }
+            var payload = {
+              user: user,
+              expires: Date.now() + parseInt(process.env.JWT_EXPIRATION_MS),
+            };
+
+            var token = jwt.sign(JSON.stringify(payload), process.env.JWT_SECRET);
+            return res.json({token: token });
           });
         });
       } else {
+        if(req.path==='signup'){
+          return res.status(422).json({ data: { error: "Sorry, there is an exisiting account with this email"}})
+        }
         return res.redirect('/#!/signup?error=existinguser');
       }
     });
   } else {
+    if(req.path==='signup'){
+      return res.status(422).json({ data: { error: "All fields are required"}})
+    }
     return res.redirect('/#!/signup?error=incomplete');
   }
 };

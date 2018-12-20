@@ -10,18 +10,21 @@ module.exports = function(app, passport, auth) {
 
     //Setting up the users api
     app.post('/users', users.create);
-    app.post('/users/avatars', users.avatars);
+    app.post('/users/avatars', passport.authenticate('jwt', { session: false }), users.avatars);
+
+    //Setup api signup route
+    app.post('/api/auth/signup', users.create);
 
     // Donation Routes
-    app.post('/donations', users.addDonation);
+    app.post('/donations', passport.authenticate('jwt', { session: false }), users.addDonation);
 
     app.post('/users/session', passport.authenticate('local', {
         failureRedirect: '/signin',
         failureFlash: 'Invalid email or password.'
     }), users.session);
 
-    app.get('/users/me', users.me);
-    app.get('/users/:userId', users.show);
+    app.get('/users/me', passport.authenticate('jwt', { session: false }), users.me);
+    app.get('/users/:userId', passport.authenticate('jwt', { session: false }), users.show);
 
     //Setting the facebook oauth routes
     app.get('/auth/facebook', passport.authenticate('facebook', {
@@ -65,7 +68,7 @@ module.exports = function(app, passport, auth) {
     }), users.authCallback);
 
     //Finish with setting up the userId param
-    app.param('userId', users.user);
+    app.param('userId', passport.authenticate('jwt', { session: false }), users.user);
 
     // Answer Routes
     var answers = require('../app/controllers/answers');
