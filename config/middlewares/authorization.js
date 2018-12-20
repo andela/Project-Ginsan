@@ -1,3 +1,8 @@
+var passportJWT = require("passport-jwt"),
+    JWTStrategy = passportJWT.Strategy,
+    ExtractJWT  = passportJWT.ExtractJwt,
+    passport    = require('passport');
+
 /**
  * Generic require login routing middleware
  */
@@ -19,6 +24,19 @@ exports.user = {
         next();
     }
 };
+
+/**
+ * JWT Authorization middleware
+ */
+exports.jwtPassportAutorization = function(req, res, next){
+    passport.use(new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        secretOrKey   : process.env.JWT_SECRET
+    },function (jwtPayload, cb) {
+             return cb(null, jwtPayload);
+        }
+    ));
+}
 
 /**
  * Article authorizations routing middleware
