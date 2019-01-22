@@ -14,7 +14,7 @@ var mongoose = require('mongoose'),
 var UserSchema = new Schema({
     name: {type: String, required: true},
     email: String,
-    username: {type: String, required: true, unique: true, index: true},
+    username: {type: String, required: false, unique: true, index: true},
     provider: String,
     avatar: String,
     premium: Number, // null or 0 for non-donors, 1 for everyone else (for now)

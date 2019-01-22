@@ -1,9 +1,11 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-  User = mongoose.model('User');
+var mongoose = require('mongoose');
 var avatars = require('./avatars').all();
+
+
+var User = mongoose.model('User');
 
 /**
  * Auth callback
@@ -78,30 +80,42 @@ exports.checkAvatar = function(req, res) {
  */
 exports.create = function(req, res) {
   if (req.body.name && req.body.password && req.body.email) {
+
+    console.log(req.body.email);
+
     User.findOne({
       email: req.body.email
     }).exec(function(err,existingUser) {
+
       if (!existingUser) {
-        var user = new User(req.body);
+        //var user = new User(req.body);
+        
+        User.create(req.body, function(err, user) {
         // Switch the user's avatar index to an actual avatar url
         user.avatar = avatars[user.avatar];
         user.provider = 'local';
         user.save(function(err) {
           if (err) {
-            return res.render('/#!/signup?error=unknown', {
-              errors: err.errors,
-              user: user
-            });
+
+            return res.redirect('/#!/signup?error=unknown');
+            // return es.render('/#!/signup?error=unknown', {
+            //   errors: err.errors,
+            //   user: user
+            // });
           }
           req.logIn(user, function(err) {
             if (err) return next(err);
             return res.redirect('/#!/');
           });
         });
+
+      });
       } else {
         return res.redirect('/#!/signup?error=existinguser');
       }
     });
+
+  
   } else {
     return res.redirect('/#!/signup?error=incomplete');
   }
@@ -175,6 +189,7 @@ exports.me = function(req, res) {
  * Find user by id
  */
 exports.user = function(req, res, next, id) {
+
   User
     .findOne({
       _id: id

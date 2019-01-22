@@ -6,6 +6,7 @@ var should = require('should'),
     mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Article = mongoose.model('Article');
+    
 
 //Globals
 var user;
