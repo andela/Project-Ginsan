@@ -91,6 +91,13 @@ exports.create = function(req, res) {
         //var user = new User(req.body);
         
         User.create(req.body, function(err, user) {
+          console.log('erorrrrrr')
+          console.log(err)
+          
+
+
+
+
         // Switch the user's avatar index to an actual avatar url
         user.avatar = avatars[user.avatar];
         user.provider = 'local';
