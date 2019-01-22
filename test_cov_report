@@ -1,0 +1,14 @@
+
+echo 'cleaning the report'
+rm -rf coverage
+
+echo 'cleaning the all test files'
+
+rm -rf test/all
+mkdir -p test/all
+
+echo 'creating the all test file'
+cat test/*/* >> test/all/all.test.js
+
+echo 'running the tests'
+istanbul cover node_modules/.bin/_mocha test/all/all.test.js 

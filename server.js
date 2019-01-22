@@ -1,3 +1,6 @@
+//support loading of env variables from .env files
+require('dotenv-extended').load();
+
 /**
  * Module dependencies.
  */
@@ -20,7 +23,7 @@ var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
     mongoose = require('mongoose');
 
 //Bootstrap db connection
-var db = mongoose.connect(config.db);
+mongoose.connect(config.db || 'mongodb://localhost/cards');
 
 //Bootstrap models
 var models_path = __dirname + '/app/models';

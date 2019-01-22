@@ -48,7 +48,7 @@ module.exports = function(grunt) {
                     debug: true,
                     delayTime: 1,
                     env: {
-                        PORT: 3000
+                        PORT: 8080
                     },
                     cwd: __dirname
                 }
@@ -97,6 +97,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-bower-task');
+    grunt.loadNpmTasks('grunt-istanbul');
 
     //Making grunt default to force in order not to break the project.
     grunt.option('force', true);
