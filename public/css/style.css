@@ -408,7 +408,7 @@
    font-weight: 400;
    text-align: center;
    color: white;
-   background: #C54141;
+   background: #078B2C;
    margin-top: 3px;
    margin-bottom: 3px;
    margin-right: 10px;
@@ -443,7 +443,7 @@
  }
 
  .login-item {
-   max-width: 48%;
+   max-width: 40%;
  }
 
  .input-info {
