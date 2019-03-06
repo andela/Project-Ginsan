@@ -2,7 +2,11 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-  User = mongoose.model('User');
+    bcrypt = require('bcryptjs'),
+    User = mongoose.model('User'),
+    config = require('../../config/config'),
+    jwt = require('jsonwebtoken');
+
 var avatars = require('./avatars').all();
 
 /**
@@ -185,4 +189,61 @@ exports.user = function(req, res, next, id) {
       req.profile = user;
       next();
     });
+};
+
+exports.api_sign_in = async function (req, res) {
+    let userWithEmail = await User.findOne({email: req.body.email});
+    if (!userWithEmail) {
+        res.status(401).json({message: "Invalid Username/Password combination"});
+        return;
+    }
+    userWithEmail = userWithEmail._doc;
+    bcrypt.compare(req.body.password, userWithEmail.hashed_password, function (err, response) {
+        if (response) {
+            const payload = {user: userWithEmail};
+            const options = {expiresIn: '2d', issuer: 'https://cardsforhumanity.com'};
+            const secret = config.jwt_secret_key;
+            const token = jwt.sign(payload, secret, options);
+            res.json({token: token, id: userWithEmail.id, email: userWithEmail.email}).status(200);
+        } else {
+            res.status(401).json({message: 'Invalid Credentials'});
+        }
+    });
+};
+
+
+exports.api_sign_up = async function (req, res) {
+    let userReqBody = req.body;
+    let errors = [];
+    console.log(userReqBody);
+    if (!userReqBody.email) {
+        errors.push('Please Provide User Email');
+    }
+    if (!userReqBody.name) {
+        errors.push('Please provide user name');
+    }
+    if (!userReqBody.password) {
+        errors.push('Please provide user password');
+    }
+    if (errors.length > 0) {
+        res.status(400).json({errorMessage: 'Invalid Request', errors: errors});
+        return;
+    }
+    const existingUser = await User.findOne({email: userReqBody.email});
+    if (existingUser) {
+        res.json({errorMessage: 'A user already exist with the email provided'}).status(400);
+        return;
+    }
+    let user = new User(userReqBody);
+    user.username = userReqBody.email;
+    user.provider = 'local';
+    user.avatar = avatars[user.avatar];
+    user.encryptPassword(user.password);
+    user.save();
+
+    const payload = {user: user};
+    const options = {expiresIn: '2d', issuer: 'https://cardsforhumanity.com'};
+    const secret = config.jwt_secret_key;
+    const token = jwt.sign(payload, secret, options);
+    res.send({message: "sign up successful", token: token}).status(200);
 };
