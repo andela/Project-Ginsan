@@ -215,7 +215,6 @@ exports.api_sign_in = async function (req, res) {
 exports.api_sign_up = async function (req, res) {
     let userReqBody = req.body;
     let errors = [];
-    console.log(userReqBody);
     if (!userReqBody.email) {
         errors.push('Please Provide User Email');
     }
