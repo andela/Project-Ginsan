@@ -239,7 +239,7 @@ exports.api_sign_up = async function (req, res) {
         password: userReqBody.password,
         username: userReqBody.email,
         provider: 'local',
-        avatar: avatars[user.avatar]
+        avatar: avatars[userReqBody.avatar]
     });
     user.encryptPassword(user.password);
     user.save();
