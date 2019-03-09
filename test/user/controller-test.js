@@ -13,12 +13,18 @@ chai.Should();
 
 const validUserEmail = 'olatunde@mailinator.com';
 const validUserPassword = 'Password2344';
+let testInvalidEmail = 'test123@gmail.com';
 
 //The tests
 describe('User Controller Tests', function () {
+    before(async function (done) {
+        User.deleteMany({email: validUserEmail});
+        User.deleteMany({email: testInvalidEmail});
+        done()
+    });
+
     describe('User Sign Up', function () {
         it('should be able to Sign Up with a valid email', async function (done) {
-            await User.deleteMany({email: validUserEmail});
             const req = {email: validUserEmail, password: validUserPassword, name: 'olat'};
             chai.request(app)
                 .post('/users/new')
@@ -63,9 +69,7 @@ describe('User Controller Tests', function () {
         });
 
         it('should not login with incorrect credentials and and get a 401', async function (done) {
-            let testEmail = 'test123@gmail.com';
-            let result = await User.deleteMany({email: testEmail});
-            const req = {email: testEmail, password: validUserPassword};
+            const req = {email: testInvalidEmail, password: validUserPassword};
             const {err, res} = await chai.request(app).post('/users/login').send(req);
             should.equal(res.statusCode, 401);
             done();
@@ -73,8 +77,8 @@ describe('User Controller Tests', function () {
     });
 
     after(async function (done) {
-        let result = await User.deleteMany({email: "test@test.com"});
-        result = await User.deleteMany({email: validUserEmail});
+        User.deleteMany({email: "test@test.com"});
+        User.deleteMany({email: validUserEmail});
         done();
     });
 });
