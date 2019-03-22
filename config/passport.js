@@ -5,7 +5,10 @@ var mongoose = require('mongoose'),
     GitHubStrategy = require('passport-github').Strategy,
     GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
     User = mongoose.model('User'),
-    config = require('./config');
+    config = require('./config'),
+    passportJWT = require("passport-jwt");
+var JWTStrategy   = passportJWT.Strategy;
+var ExtractJWT = passportJWT.ExtractJwt;
 
 
 module.exports = function(passport) {
@@ -24,6 +27,36 @@ module.exports = function(passport) {
             done(err, user);
         });
     });
+
+    // jwt strategy
+    passport.use(new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        secretOrKey   : config.jwt_secret
+    },
+        function (jwtPayload, done) {
+            // find user 
+            User.findOne({
+                id: jwtPayload.id
+            }, function(err, user){
+                if (err) {
+                    return done(err);
+                }
+                if (!user) {
+                    return done(null, false, {
+                        message: 'Unknown user'
+                    });
+                }
+                if (!user.authenticate(password)) {
+                    return done(null, false, {
+                        message: 'Invalid password'
+                    });
+                }
+                user.email = null;
+                user.hashed_password = null;
+                return done(null, user);
+            })
+        }
+    ));
 
     //Use local strategy
     passport.use(new LocalStrategy({
