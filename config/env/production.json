@@ -2,6 +2,8 @@
     "app": {
         "name": "Cards for Humanity"
     },
+    "jwt_secret": "jdfi9h09h394h3094a4kfsldf0924h23",
+    "jwt_expires": 262800,
     "facebook": {
         "clientID": "APP_ID",
         "clientSecret": "APP_SECRET",

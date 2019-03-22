@@ -52,7 +52,8 @@ app.use(function(req, res, next){
 require('./config/express')(app, passport, mongoose);
 
 //Bootstrap routes
-require('./config/routes')(app, passport, auth);
+require('./config/routes/web')(app, passport, auth);
+require('./config/routes/api')(app, passport);
 
 //Start the app by listening on <port>
 var port = config.port;

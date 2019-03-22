@@ -4,6 +4,8 @@
 var mongoose = require('mongoose'),
   User = mongoose.model('User');
 var avatars = require('./avatars').all();
+var jwt = require("jsonwebtoken");
+var config = require('../../config/config');
 
 /**
  * Auth callback
@@ -185,4 +187,107 @@ exports.user = function(req, res, next, id) {
       req.profile = user;
       next();
     });
+};
+
+/**
+ * API Login route
+ */
+exports.apiSignin = function(passport){
+  // return middleware
+  return function apiSignin(req, res) {
+    // authenticate passport with local strategy
+    passport.authenticate(
+      'local', 
+      { session: false }, 
+      function (err, user, info) {
+        // if there was an error or no login data was passed
+        if (err || !user) {
+          var errorMessage = info ? info.message : 'Invalid login credentials.';
+          // return validation error response
+          return res.status(422)
+            .json({ 
+              message: 'Failed to authenticate. ERROR:'+errorMessage
+            });
+        }
+
+        // attempt to log in the user
+        req.login(user, { session: false }, function (err) {
+          // log in attempt failed
+          if (err) res.send(err);
+  
+          // generate a token for the user
+          var token = jwt.sign(
+            { 
+              id: user._id, 
+              email: user.email 
+            }, 
+            config.jwt_secret, 
+            {
+              expiresIn: 
+              config.jwt_expires
+            }
+          );
+          
+          // return the generated token in the response
+          return res.json({ token: token });
+        });
+    })(req, res);
+  };
+};
+
+/**
+ * API sign up route
+ */
+exports.apiSignup = function (req, res) {
+  // ensure the email, name and, password have been passed
+  if (req.body.name && req.body.password && req.body.email) {
+    // find user with the provided email addess
+    User.findOne({ email: req.body.email })
+        .exec(function (err, existingUser) {
+          if (!existingUser) {
+            // create new user with request body
+            var user = new User(req.body);
+            // set user avatar and provider
+            user.avatar = avatars[user.avatar];
+            user.provider = 'local';
+
+            // save new user
+            user.save(function (err) {
+              // return an error response if failed to save user
+              if (err) {
+                return res.status(400)
+                          .json({ 
+                            message: "An error occured.", 
+                            errors: err.errors 
+                          });
+              }
+              
+              // log user into their account
+              return req.login(user, function (err) {
+                // generate a token for the user
+                var token = jwt.sign(
+                  { id: user._id, email: user.email }, 
+                  config.jwt_secret, 
+                  {expiresIn: config.jwt_expires}
+                );
+                // return the generated token in the response
+                return res.json({ token: token });
+              });
+            });
+          }
+          else{
+            // return user exists error response
+            return res.status(400).json({ 
+              message: "That email address is already registered." 
+            });
+          }
+    });
+  }
+  else{
+    // return invalid submission error
+    return res.status(422).json({
+      message: 'Please fill in the your name, email, and password to sign up.',
+    });
+  }
+  
 };
