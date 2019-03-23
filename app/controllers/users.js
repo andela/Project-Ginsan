@@ -2,8 +2,55 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-  User = mongoose.model('User');
-var avatars = require('./avatars').all();
+  User = mongoose.model('User'),
+  config = require('../../config/config'),
+  jwt = require('jsonwebtoken'),
+  passport = require('passport'),
+  avatars = require('./avatars').all();
+
+  var generateJWT = function(_id, _name, secretKey){
+    var token = jwt.sign({ id: _id, name: _name}, secretKey);
+    return 'JWT ' + token;
+  };
+
+/**
+ * Generate a JWT by using the id and name of the user
+ */
+exports.generateJwtOnLogin = function(req, res){
+    passport.authenticate('local', {session: false}, function (err, user) {
+
+      req.login(user, {session: false}, function (err) {
+          if (err) {
+              res.send(err);
+          }
+          // generate a signed son web token with the contents of user id and username and return it in the response
+          if(user){
+            var token = generateJWT(user._id, user.name, config.secretKey);
+            res.json({success: true, token: token});
+          }else{
+              return res.json({success:false, message:'Invalid email or passwowrd'});
+          }
+      });
+  })(req, res);
+};
+
+
+
+
+/**
+ * /api/auth/profile
+ * simulating a protected route
+ */
+
+exports.getProfileDetails = function (req, res) {
+  try {
+    res.json({message:'Authorized'});
+  }
+  catch(error){
+    res.json({success:false, message:error});
+  }
+};
+
 
 /**
  * Auth callback
@@ -39,6 +86,7 @@ exports.signup = function(req, res) {
  */
 exports.signout = function(req, res) {
   req.logout();
+  res.clearCookie('jwt');
   res.redirect('/');
 };
 
@@ -186,3 +234,5 @@ exports.user = function(req, res, next, id) {
       next();
     });
 };
+
+exports.generateJWT=generateJWT;
