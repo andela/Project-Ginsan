@@ -81,6 +81,9 @@ exports.create = function (req, res) {
     User.findOne({
       email: req.body.email
     }).exec(function (err, existingUser) {
+      if (err) {
+        console.error(err)
+      }
       if (!existingUser) {
         var user = new User(req.body)
         // Switch the user's avatar index to an actual avatar url
@@ -92,11 +95,9 @@ exports.create = function (req, res) {
               errors: err.errors,
               user: user
             })
+          } else {
+            return res.status(201).json({ 'userCreated': true })
           }
-          req.logIn(user, function (err) {
-            if (err) return next(err)
-            return res.redirect('/#!/')
-          })
         })
       } else {
         return res.redirect('/#!/signup?error=existinguser')

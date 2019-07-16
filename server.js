@@ -33,7 +33,7 @@ const spinTestDb = require('./config/testDb')
 
 spinTestDb().then(
   db => {
-    mongoose.connect(db.location, (err) => {
+    mongoose.connect(db.location, { useNewUrlParser: true }, (err) => {
       if (err) {
         console.error('Error connecting to db ', err)
       }
@@ -63,16 +63,13 @@ require('./config/passport')(passport)
 
 var app = express()
 
-app.use(function (req, res, next) {
-  next()
-})
-
 // express settings
-require('./config/express')(app, passport, mongoose)
 
 // Bootstrap routes
+const bodyParser = require('body-parser')
+app.use(bodyParser())
 require('./config/routes')(app, passport, auth)
-
+require('./config/express')(app, passport, mongoose)
 // Start the app by listening on <port>
 var port = config.port
 var server = app.listen(port)
