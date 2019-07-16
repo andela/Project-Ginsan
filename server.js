@@ -18,6 +18,7 @@ var io = require('socket.io')
 
 // Load configurations
 // if test env, load example file
+var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 const path = require('path')
 var config = require('./config/config')
 
@@ -26,7 +27,19 @@ var auth = require('./config/middlewares/authorization')
 var mongoose = require('mongoose')
 
 // Bootstrap db connection
-mongoose.connect(config.db)
+// config.db currently points to MONGOHQ_URL which is undefined
+// mongoose.connect(config.db)
+const spinTestDb = require('./config/testDb')
+
+spinTestDb().then(
+  db => {
+    mongoose.connect(db.location, (err) => {
+      if (err) {
+        console.error('Error connecting to db ', err)
+      }
+    })
+  }
+)
 
 // Bootstrap models
 var modelsPath = path.join(__dirname, '/app/models')

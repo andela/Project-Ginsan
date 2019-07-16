@@ -3,32 +3,20 @@
  */
 var express = require('express')
 
-var mongoStore = require('connect-mongo')(express)
-
 var flash = require('connect-flash')
 
 var helpers = require('view-helpers')
-
+const logger = require('morgan')
 var config = require('./config')
 
 module.exports = function (app, passport, mongoose) {
   app.set('showStackError', true)
 
-  // Should be placed before express.static
-  app.use(express.compress({
-    filter: function (req, res) {
-      return (/json|text|javascript|css/).test(res.getHeader('Content-Type'))
-    },
-    level: 9
-  }))
-
   // Setting the fav icon and static folder
-  app.use(express.favicon())
-  app.use(express.static(config.root + '/public'))
 
   // Don't use logger for test env
   if (process.env.NODE_ENV !== 'test') {
-    app.use(express.logger('dev'))
+    app.use(logger('dev'))
   }
 
   // Set views path, template engine and default layout
@@ -39,23 +27,9 @@ module.exports = function (app, passport, mongoose) {
   app.enable('jsonp callback')
 
   app.configure(function () {
-    // cookieParser should be above session
-    app.use(express.cookieParser())
-
     // bodyParser should be above methodOverride
-    app.use(express.bodyParser())
-    app.use(express.methodOverride())
 
-    // express/mongo session storage
-    app.use(express.session({
-      secret: 'MEAN',
-      store: new mongoStore({
-        url: config.db,
-        collection: 'sessions',
-        mongoose_connection: mongoose.connection
-      })
-    }))
-
+    // REMOVE MIDDLEWARES NOLONGER BUNDLED WITH EXPRESS
     // connect flash for flash messages
     app.use(flash())
 
