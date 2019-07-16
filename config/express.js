@@ -24,7 +24,6 @@ module.exports = function (app, passport, mongoose) {
   // Enable jsonp
   app.enable('jsonp callback')
 
-
   // dynamic helpers
   app.use(helpers(config.app.name))
 

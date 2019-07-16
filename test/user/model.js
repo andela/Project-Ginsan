@@ -17,10 +17,9 @@ describe('<Unit Test>', function () {
   describe('Model User:', function () {
     before(function (done) {
       user = new User({
-        name: 'Full name',
-        email: 'test@test.com',
-        username: 'user',
-        password: 'password'
+        name: 'Yorc',
+        email: 'yorc@yoste.io',
+        password: 'humian'
       })
 
       done()
@@ -28,14 +27,15 @@ describe('<Unit Test>', function () {
 
     describe('Method Save', function () {
       it('should be able to save whithout problems', function (done) {
-        return user.save(function (err) {
+        return user.save(function (err, res) {
+          res.should.have.property('name', 'Yorc')
           should.not.exist(err)
           done()
         })
       })
 
-      it('should be able to show an error when try to save witout name', function (done) {
-        user.name = ''
+      it('should show error when trying to save without password', function (done) {
+        user.password = ''
         return user.save(function (err) {
           should.exist(err)
           done()
