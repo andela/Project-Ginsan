@@ -26,43 +26,38 @@ module.exports = function (app, passport, mongoose) {
   // Enable jsonp
   app.enable('jsonp callback')
 
-  app.configure(function () {
-    // bodyParser should be above methodOverride
+  // connect flash for flash messages
+  app.use(flash())
 
-    // REMOVE MIDDLEWARES NOLONGER BUNDLED WITH EXPRESS
-    // connect flash for flash messages
-    app.use(flash())
+  // dynamic helpers
+  app.use(helpers(config.app.name))
 
-    // dynamic helpers
-    app.use(helpers(config.app.name))
+  // use passport session
+  app.use(passport.initialize())
+  app.use(passport.session())
 
-    // use passport session
-    app.use(passport.initialize())
-    app.use(passport.session())
+  // routes should be at the last
+  app.use(app.router)
 
-    // routes should be at the last
-    app.use(app.router)
+  // Assume "not found" in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
+  app.use(function (err, req, res, next) {
+    // Treat as 404
+    if (~err.message.indexOf('not found')) return next()
 
-    // Assume "not found" in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
-    app.use(function (err, req, res, next) {
-      // Treat as 404
-      if (~err.message.indexOf('not found')) return next()
+    // Log it
+    console.error(err.stack)
 
-      // Log it
-      console.error(err.stack)
-
-      // Error page
-      res.status(500).render('500', {
-        error: err.stack
-      })
+    // Error page
+    res.status(500).render('500', {
+      error: err.stack
     })
+  })
 
-    // Assume 404 since no middleware responded
-    app.use(function (req, res, next) {
-      res.status(404).render('404', {
-        url: req.originalUrl,
-        error: 'Not found'
-      })
+  // Assume 404 since no middleware responded
+  app.use(function (req, res, next) {
+    res.status(404).render('404', {
+      url: req.originalUrl,
+      error: 'Not found'
     })
   })
 }
