@@ -15,7 +15,10 @@ var authTypes = ['github', 'twitter', 'facebook', 'google']
  * User Schema
  */
 var UserSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    unique: true
+  },
   email: String,
   username: String,
   provider: String,
@@ -65,17 +68,19 @@ UserSchema.path('username').validate(function (username) {
   return username.length
 }, 'Username cannot be blank')
 
-UserSchema.path('hashed_password').validate(function (hashed_password) {
+UserSchema.path('hashed_password').validate(function (hashedPassword) {
   // if you are authenticating by any of the oauth strategies, don't validate
   if (authTypes.indexOf(this.provider) !== -1) return true
-  return hashed_password.length
+  return hashedPassword.length
 }, 'Password cannot be blank')
 
 /**
  * Pre-save hook
  */
 UserSchema.pre('save', function (next) {
-  if (!this.isNew) return next()
+  if (!this.isNew) {
+    return next()
+  }
 
   if (!validatePresenceOf(this.password) && authTypes.indexOf(this.provider) === -1) { next(new Error('Invalid password')) } else { next() }
 })

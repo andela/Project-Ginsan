@@ -4,10 +4,9 @@
 var express = require('express')
 
 var fs = require('fs')
+const logger = require('morgan')
 
 var passport = require('passport')
-
-var logger = require('mean-logger')
 
 var io = require('socket.io')
 
@@ -33,7 +32,7 @@ const spinTestDb = require('./config/testDb')
 
 spinTestDb().then(
   db => {
-    mongoose.connect(db.location, { useNewUrlParser: true }, (err) => {
+    mongoose.connect(db.location, { useNewUrlParser: true, useCreateIndex: true }, (err) => {
       if (err) {
         console.error('Error connecting to db ', err)
       }
@@ -68,6 +67,7 @@ var app = express()
 // Bootstrap routes
 const bodyParser = require('body-parser')
 app.use(bodyParser())
+app.use(logger('dev'))
 require('./config/routes')(app, passport, auth)
 require('./config/express')(app, passport, mongoose)
 // Start the app by listening on <port>
@@ -79,7 +79,6 @@ require('./config/socket/socket')(ioObj)
 console.log('Express app started on port ' + port)
 
 // Initializing logger
-logger.init(app, passport, mongoose)
 
 // expose app
 exports = module.exports = app

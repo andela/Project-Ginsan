@@ -1,21 +1,13 @@
 /**
  * Module dependencies.
  */
-var express = require('express')
-
 var helpers = require('view-helpers')
-const logger = require('morgan')
 var config = require('./config')
 
 module.exports = function (app, passport, mongoose) {
   app.set('showStackError', true)
 
   // Setting the fav icon and static folder
-
-  // Don't use logger for test env
-  if (process.env.NODE_ENV !== 'test') {
-    app.use(logger('dev'))
-  }
 
   // Set views path, template engine and default layout
   app.set('views', config.root + '/app/views')

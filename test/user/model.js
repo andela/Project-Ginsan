@@ -25,15 +25,23 @@ describe('<Unit Test>', function () {
       done()
     })
 
-    describe('Create opeation', function () {
-      it('should be able to save whithout problems', function (done) {
+    describe('Create operation', function () {
+      it('should save given a valid user object', (done) => {
         return user.save(function (err, res) {
           res.should.have.property('name', 'Yorc')
           should.not.exist(err)
+          console.log(res)
           done()
         })
       })
 
+      it('Should reject duplicate registration', (done) => {
+        return user.save((err, rres) => {
+          should.not.exist(err)
+          console.log(rres)
+          done()
+        })
+      })
       it('should show error when trying to save without password', function (done) {
         user.password = ''
         return user.save(function (err) {

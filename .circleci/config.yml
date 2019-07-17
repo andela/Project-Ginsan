@@ -35,7 +35,8 @@ jobs:
 
       - run:
           name: test reporter setup
-          command: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
 
             chmod +x ./cc-test-reporter
 
@@ -47,7 +48,7 @@ jobs:
       # run tests!
       - run:
           name: Run test reporter
-          command:
+          command: |
             ./cc-test-reporter before-build
             yarn test
             ./cc-test-reporter after-build --coverage-input-type lcov -d --exit-code $?

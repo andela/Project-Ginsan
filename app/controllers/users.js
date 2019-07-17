@@ -91,20 +91,28 @@ exports.create = function (req, res) {
         user.provider = 'local'
         user.save(function (err) {
           if (err) {
-            return res.render('/#!/signup?error=unknown', {
-              errors: err.errors,
-              user: user
-            })
+            return res.status(400)
+              .json({
+                'userCreated': false,
+                'errorMessage': err
+              })
           } else {
             return res.status(201).json({ 'userCreated': true })
           }
         })
       } else {
-        return res.redirect('/#!/signup?error=existinguser')
+        return res.status(400).json({
+          'userCreated': false,
+          'errorMessage': 'User already exist'
+        })
       }
     })
   } else {
-    return res.redirect('/#!/signup?error=incomplete')
+    return res.status(400)
+      .json({
+        'userCreated': false,
+        'errorMessage': 'Missing fields'
+      })
   }
 }
 
@@ -135,6 +143,9 @@ exports.addDonation = function (req, res) {
       })
         .exec(function (err, user) {
         // Confirm that this object hasn't already been entered
+          if (err) {
+            console.error(err)
+          }
           var duplicate = false
           for (var i = 0; i < user.donations.length; i++) {
             if (user.donations[i].crowdrise_donation_id === req.body.crowdrise_donation_id) {
