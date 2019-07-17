@@ -52,7 +52,6 @@ describe('<Unit Test>', function () {
     })
 
     describe('Update operation', () => {
-      let randomUser
       before((done) => {
         let newPlayer = new User({
           name: 'Don',
