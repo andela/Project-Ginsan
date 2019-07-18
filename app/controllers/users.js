@@ -1,6 +1,7 @@
 /**
  * Module dependencies.
  */
+const jwt = require('jsonwebtoken')
 var mongoose = require('mongoose')
 
 var User = mongoose.model('User')
@@ -76,7 +77,7 @@ exports.checkAvatar = function (req, res) {
 /**
  * Create user
  */
-exports.create = function (req, res) {
+exports.create = async function (req, res) {
   if (req.body.name && req.body.password && req.body.email) {
     User.findOne({
       email: req.body.email
@@ -89,7 +90,7 @@ exports.create = function (req, res) {
         // Switch the user's avatar index to an actual avatar url
         user.avatar = avatars[user.avatar]
         user.provider = 'local'
-        user.save(function (err) {
+        user.save(async function (err) {
           if (err) {
             return res.status(400)
               .json({
@@ -97,7 +98,12 @@ exports.create = function (req, res) {
                 'errorMessage': err
               })
           } else {
-            return res.status(201).json({ 'userCreated': true })
+            let sharedKey = 'thePennyDropped'
+            let token = await jwt.sign({ data: 'kibana' }, sharedKey, { expiresIn: 160 })
+            return res.status(201).json({
+              'userCreated': true,
+              token
+            })
           }
         })
       } else {
